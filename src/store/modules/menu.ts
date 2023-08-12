@@ -16,6 +16,7 @@ const useMenuStore = defineStore('menuState', {
       return data.result
     },
   },
+  // 自动持久化
   persist: true,
 })
 
