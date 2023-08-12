@@ -9,12 +9,29 @@ console.log(modules)
 
 const routes = [
   {
-    path: '/',
+    path: '/login',
     name: 'Login',
     meta: {
       title: '登录',
     },
     component: () => import('@/views/login/index.vue'),
+  },
+  {
+    path: '/',
+    name: 'Index',
+    redirect: '/home',
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '/home',
+        name: 'Home',
+        meta: {
+          icon: 'House',
+          title: '首页',
+        },
+        component: () => import('@/views/home/index.vue'),
+      },
+    ],
   },
 ]
 

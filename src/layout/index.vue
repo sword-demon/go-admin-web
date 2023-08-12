@@ -1,5 +1,6 @@
 <script lang='ts' setup>
   import AsideMenu from './aside/index.vue'
+  import TopBar from './header/index.vue'
 
   defineOptions({
     name: 'Layout',
@@ -20,7 +21,9 @@
       <!-- 左侧菜单栏 end -->
       <el-container>
         <!-- 顶部导航栏 start -->
-        <el-header>顶部导航栏</el-header>
+        <el-header>
+          <TopBar></TopBar>
+        </el-header>
         <!-- 顶部导航栏 end -->
         <!-- 主要内容 start -->
         <el-main>
@@ -70,9 +73,9 @@
     top: 0;
     left: 0;
     padding: 10px;
-    background-image: url("../assets/system-bg.jpg");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+    /*background-image: url("../assets/system-bg.jpg");*/
+    /*background-size: cover;*/
+    /*background-position: center center;*/
+    /*background-repeat: no-repeat;*/
   }
 </style>

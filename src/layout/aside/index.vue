@@ -9,12 +9,10 @@
 
   const route = useRoute()
   const menuStore = useMenuStore()
-
-  // 获取菜单数据
-  const { routers } = menuStore.routers
   const menuData = ref()
-  menuData.value = routers
 
+  const routers = menuStore.routers
+  menuData.value = routers
 </script>
 
 <template>
