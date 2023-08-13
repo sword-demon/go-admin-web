@@ -33,6 +33,22 @@ const useTagsStore = defineStore('tagsState', {
     addViews(view: any) {
       this.addVisitedViews(view)
     },
+    delView(path: string) {
+      return new Promise(resolve => {
+        this.delVisitedView(path)
+        resolve({
+          visitedViews: [...this.visitedViews],
+        })
+      })
+    },
+    delVisitedView(path: string) {
+      return new Promise(resolve => {
+        this.visitedViews = this.visitedViews.filter(v => {
+          return v.path !== path || v.meta.affix
+        })
+        resolve([...this.visitedViews])
+      })
+    },
   },
 })
 

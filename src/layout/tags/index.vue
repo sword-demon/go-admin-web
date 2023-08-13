@@ -50,6 +50,20 @@
     return false
   }
 
+  // 判断是否删除的是当前的 tabs 标签
+  const isActive = (path: string): boolean => {
+    return route.path === path
+  }
+
+  // 删除 tabs 标签
+  const removeTab = async (activeTabPath: string) => {
+    if (isActive(activeTabPath)) {
+      // 转移到上一个或下一个标签
+      toLastViews(activeTabPath)
+    }
+    await tagStore.delView(activeTabPath)
+  }
+
   onMounted(() => {
     addTabs()
   })
@@ -63,7 +77,7 @@
 <template>
   <div class='main-tabs-view'>
     <div class='tabs-view'>
-      <el-tabs v-model='activeTabsValue' type='card' @tabClick='tabClick'>
+      <el-tabs v-model='activeTabsValue' type='card' @tabClick='tabClick' @tab-remove='removeTab'>
         <el-tab-pane v-for='item in visitedViews' :key='item.path' :name='item.path' :path='item.path'
                      :label='item.title'
                      :closable='!(item.meta && item.meta.affix)'>
