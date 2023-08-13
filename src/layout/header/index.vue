@@ -1,5 +1,6 @@
 <script lang='ts' setup>
   import CollapseIcon from './components/CollapseIcon.vue'
+  import BreadCrumb from './components/BreadCrumb.vue'
 
   defineOptions({ name: 'TopBar' })
 </script>
@@ -8,6 +9,7 @@
   <div class='main'>
     <div class='tool-left'>
       <CollapseIcon />
+      <BreadCrumb />
     </div>
     <div class='linkBox'>
       <!-- 登录用户的信息 start -->
@@ -105,5 +107,11 @@
     height: 70px;
     box-shadow: rgb(0 0 0 /10%) 0 0 0;
     background-color: white;
+  }
+
+  .tool-left {
+    display: flex;
+    align-items: center;
+    height: 100%;
   }
 </style>

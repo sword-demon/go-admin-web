@@ -42,8 +42,9 @@ const router = createRouter({
 let registerRouteFresh = true
 
 // 路由前置守卫
+// @ts-ignore
 router.beforeEach(async (to, from, next) => {
-  console.log(from)
+  // console.log(from)
   // 打开进度条
   start()
 
