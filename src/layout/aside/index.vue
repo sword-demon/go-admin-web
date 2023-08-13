@@ -2,6 +2,7 @@
   import { useRoute } from 'vue-router'
   import useMenuStore from '@/store/modules/menu'
   import { ref } from 'vue'
+  import useSettingStore from '@/store/modules/setting.ts'
 
   defineOptions({
     name: 'Aside',
@@ -9,6 +10,7 @@
 
   const route = useRoute()
   const menuStore = useMenuStore()
+  const settingStore = useSettingStore()
   const menuData = ref()
 
   const routers = menuStore.routers
@@ -17,9 +19,10 @@
 
 <template>
   <el-menu text-color='#67879b' router :default-active='route.path' :unique-opened='false'
-           :default-openeds='[route.path]' class='el-menu-vertical-demo'>
+           :default-openeds='[route.path]' class='el-menu-vertical-demo' :collapse='!settingStore.isCollapse'
+           :collapse-transition='true'>
     <!-- logo start -->
-    <div class='imageBox'>
+    <div class='imageBox' v-if='settingStore.isCollapse'>
       <img src='@/assets/logo01.png' alt='logo'>
     </div>
     <!-- logo end -->
@@ -70,6 +73,7 @@
 
   :deep(.el-menu-item.is-active) {
     color: white;
-    background: linear-gradient(to right, #e99d53, #a39a32, #3263a3);
+    background: linear-gradient(to right, #b9a591, #29cc9b, #3263a3);
   }
+
 </style>

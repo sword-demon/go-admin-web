@@ -1,10 +1,14 @@
 <script lang='ts' setup>
+  import CollapseIcon from './components/CollapseIcon.vue'
 
   defineOptions({ name: 'TopBar' })
 </script>
 
 <template>
   <div class='main'>
+    <div class='tool-left'>
+      <CollapseIcon />
+    </div>
     <div class='linkBox'>
       <!-- 登录用户的信息 start -->
       <el-popover :width='300'>
@@ -93,5 +97,13 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .main {
+    display: flex;
+    justify-content: space-between;
+    height: 70px;
+    box-shadow: rgb(0 0 0 /10%) 0 0 0;
+    background-color: white;
   }
 </style>

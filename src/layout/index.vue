@@ -78,4 +78,9 @@
     /*background-position: center center;*/
     /*background-repeat: no-repeat;*/
   }
+
+  /*  scrollbar 样式*/
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 206px;
+  }
 </style>
