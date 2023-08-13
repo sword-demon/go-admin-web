@@ -5,9 +5,7 @@
   defineOptions({ name: 'BreadCrumb' })
   const route = useRoute()
   const router = useRouter()
-  console.log(route.matched)
   const matched = computed(() => route.matched.filter(item => item.meta && item.meta.title))
-  console.log('filter', matched)
 
   const handleLink = (item) => {
     router.push({

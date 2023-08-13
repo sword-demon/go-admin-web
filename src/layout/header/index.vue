@@ -1,6 +1,7 @@
 <script lang='ts' setup>
   import CollapseIcon from './components/CollapseIcon.vue'
   import BreadCrumb from './components/BreadCrumb.vue'
+  import Tags from '@/layout/tags/index.vue'
 
   defineOptions({ name: 'TopBar' })
 </script>
@@ -57,6 +58,9 @@
       <!-- 退出系统 end -->
     </div>
   </div>
+
+  <!-- 多标签页 -->
+  <Tags />
 </template>
 
 <style scoped>
