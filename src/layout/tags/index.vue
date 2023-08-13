@@ -3,6 +3,7 @@
   import { computed, onMounted, watch } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { TabsPaneContext } from 'element-plus'
+  import MoreButton from '@/layout/tags/components/MoreButton.vue'
 
   const tagStore = useTagsStore()
   const route = useRoute()
@@ -90,7 +91,9 @@
         </el-tab-pane>
       </el-tabs>
     </div>
-    <div class='right-btn'></div>
+    <div class='right-btn'>
+      <MoreButton />
+    </div>
   </div>
 </template>
 

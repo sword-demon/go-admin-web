@@ -49,6 +49,14 @@ const useTagsStore = defineStore('tagsState', {
         resolve([...this.visitedViews])
       })
     },
+    // 删除当前以外的其他的标签
+    delOtherViews(currentPath: string) {
+      // 首页不能删除
+      this.visitedViews = this.visitedViews.filter((v => {
+        // 当前路径和有这个属性的都不能删除 首页设置了这个属性
+        return v.path === currentPath || v.meta.affix
+      }))
+    },
   },
 })
 
