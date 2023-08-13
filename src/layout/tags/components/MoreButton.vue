@@ -15,6 +15,12 @@
   const closeOtherTab = async () => {
     tagStore.delOtherViews(route.path)
   }
+
+  // 关闭所有标签
+  const closeAllTab = async () => {
+    await tagStore.delAllViews()
+    tagStore.goHome()
+  }
 </script>
 
 <template>
@@ -29,8 +35,14 @@
       <el-dropdown-item @click='closeOtherTab'>
         <el-icon size='14'>
           <Close />
-          关闭其他
         </el-icon>
+        关闭其他
+      </el-dropdown-item>
+      <el-dropdown-item @click='closeAllTab'>
+        <el-icon size='14'>
+          <FolderDelete />
+        </el-icon>
+        关闭所有
       </el-dropdown-item>
     </template>
   </el-dropdown>

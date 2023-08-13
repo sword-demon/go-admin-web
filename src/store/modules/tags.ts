@@ -1,6 +1,7 @@
 // 标签组件存储
 
 import { defineStore } from 'pinia'
+import router from '@/router'
 
 const useTagsStore = defineStore('tagsState', {
   state: () => ({
@@ -56,6 +57,18 @@ const useTagsStore = defineStore('tagsState', {
         // 当前路径和有这个属性的都不能删除 首页设置了这个属性
         return v.path === currentPath || v.meta.affix
       }))
+    },
+    delAllViews() {
+      return new Promise(resolve => {
+        this.visitedViews = this.visitedViews.filter((v => {
+          return v.meta.affix
+        }))
+        resolve([...this.visitedViews])
+      })
+    },
+    goHome() {
+      this.activeTabsValue = '/home'
+      router.push({ path: '/home' })
     },
   },
 })
