@@ -3,10 +3,13 @@
   import type { FormInstance, FormRules } from 'element-plus'
   import { ElNotification } from 'element-plus'
   import { useRouter } from 'vue-router'
+  import { loginApi } from '@/api/login'
+  import useUserStore from '@/store/modules/user.ts'
 
   defineOptions({ name: 'LoginForm' })
 
   const router = useRouter()
+  const userStore = useUserStore()
   // 表单实例对象
   const ruleFormRef = ref<FormInstance>()
   // 表单数据对象 设置默认值
@@ -29,8 +32,42 @@
   const submitForm = (formRef) => {
     if (!formRef) return
     loading.value = true
+    formRef.validate(async (valid) => {
+      // 前端验证通过
+      if (valid) {
+        const { data } = await loginApi({ ...ruleForm })
+        console.log('data', data)
+        if (data.code === 200) {
+          // 设置 token
+          userStore.setToken(data.data.token)
+          userStore.setRefreshToken(data.data.refresh_token)
+          // userStore.setUserInfo(data.userInfo)
+          setTimeout(() => {
+            router.push({ path: '/home' })
+          }, 1500)
 
-    ElNotification.success({ message: 'ok' })
+          ElNotification.success({
+            title: '登录成功',
+            message: '欢迎登录后台管理系统',
+            duration: 3000,
+          })
+        } else {
+          ElNotification.error({
+            message: data.msg,
+            title: '温馨提示',
+            duration: 3000,
+          })
+        }
+      } else {
+        ElNotification({
+          title: '温馨提示',
+          message: '提交表单失败，你还有未填写的项！',
+          type: 'error',
+          duration: 3000,
+        })
+        return false
+      }
+    })
     loading.value = false
   }
 </script>
@@ -38,7 +75,7 @@
 <template>
   <el-form ref='ruleFormRef' :model='ruleForm' :rules='rules'>
     <el-form-item prop='username'>
-      <el-input placeholder='请输入用户名' autocomplete='off' style='position: relative;'
+      <el-input placeholder='请输入用户名' clearable style='position: relative;'
                 v-model='ruleForm.username'>
         <template #prefix>
           <el-icon class=''>
@@ -48,7 +85,7 @@
       </el-input>
     </el-form-item>
     <el-form-item prop='password'>
-      <el-input type='password' show-password placeholder='请输入密码' v-model='ruleForm.password'>
+      <el-input type='password' clearable show-password placeholder='请输入密码' v-model='ruleForm.password'>
         <template #prefix>
           <el-icon>
             <GoodsFilled />

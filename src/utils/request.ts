@@ -1,4 +1,5 @@
 import axios from 'axios'
+import useUserStore from '@/store/modules/user.ts'
 
 const service = axios.create({
   baseURL: 'http://localhost:8081',
@@ -6,6 +7,11 @@ const service = axios.create({
 })
 
 service.interceptors.request.use(config => {
+  const userStore = useUserStore()
+  const token = userStore.token
+  if (token) {
+    config.headers['Authorization'] = 'Bearer ' + token
+  }
   return config
 })
 
