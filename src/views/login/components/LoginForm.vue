@@ -1,6 +1,7 @@
 <script lang='ts' setup>
   import { reactive, ref } from 'vue'
   import type { FormInstance, FormRules } from 'element-plus'
+  import { ElNotification } from 'element-plus'
   import { useRouter } from 'vue-router'
   import { useUserStore } from '@/store/modules/user'
 
@@ -37,6 +38,7 @@
           await userStore.login(ruleForm)
           // 跳转页面
           const redirect = router.currentRoute.value?.params?.redirect as string
+          ElNotification.success({ title: '登录成功', message: '欢迎使用后台管理系统', duration: 3000 })
           await router.push(redirect || '/')
         }
       })
