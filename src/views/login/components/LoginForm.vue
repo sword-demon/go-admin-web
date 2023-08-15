@@ -1,10 +1,8 @@
 <script lang='ts' setup>
   import { reactive, ref } from 'vue'
   import type { FormInstance, FormRules } from 'element-plus'
-  import { ElNotification } from 'element-plus'
   import { useRouter } from 'vue-router'
-  import { loginApi } from '@/api/login'
-  import useUserStore from '@/store/modules/user.ts'
+  import { useUserStore } from '@/store/modules/user'
 
   defineOptions({ name: 'LoginForm' })
 
@@ -32,43 +30,19 @@
   const submitForm = (formRef) => {
     if (!formRef) return
     loading.value = true
-    formRef.validate(async (valid) => {
-      // 前端验证通过
-      if (valid) {
-        const { data } = await loginApi({ ...ruleForm })
-        console.log('data', data)
-        if (data.code === 200) {
-          // 设置 token
-          userStore.setToken(data.data.token)
-          userStore.setRefreshToken(data.data.refresh_token)
-          // userStore.setUserInfo(data.userInfo)
-          setTimeout(() => {
-            router.push({ path: '/home' })
-          }, 1500)
-
-          ElNotification.success({
-            title: '登录成功',
-            message: '欢迎登录后台管理系统',
-            duration: 3000,
-          })
-        } else {
-          ElNotification.error({
-            message: data.msg,
-            title: '温馨提示',
-            duration: 3000,
-          })
+    try {
+      formRef.validate(async (valid) => {
+        // 前端验证通过
+        if (valid) {
+          await userStore.login(ruleForm)
+          // 跳转页面
+          const redirect = router.currentRoute.value?.params?.redirect as string
+          await router.push(redirect || '/')
         }
-      } else {
-        ElNotification({
-          title: '温馨提示',
-          message: '提交表单失败，你还有未填写的项！',
-          type: 'error',
-          duration: 3000,
-        })
-        return false
-      }
-    })
-    loading.value = false
+      })
+    } catch (error) {
+      loading.value = false
+    }
   }
 </script>
 

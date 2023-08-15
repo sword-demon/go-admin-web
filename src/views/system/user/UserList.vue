@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>用户列表</div>
+  <div class='main-page'>用户列表</div>
 </template>
 
 <style scoped></style>

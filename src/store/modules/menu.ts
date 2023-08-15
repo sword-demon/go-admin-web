@@ -10,10 +10,9 @@ const useMenuStore = defineStore('menuState', {
   actions: {
     // 生成路由
     async generateRoute() {
-      const { data } = await getMenuListApi()
-      console.log('data', data)
-      this.routers = data.result
-      return data.result
+      const data = await getMenuListApi()
+      this.routers = data.data.result
+      return data.data.result
     },
   },
   // 自动持久化

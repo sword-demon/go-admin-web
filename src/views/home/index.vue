@@ -10,7 +10,11 @@
 </script>
 
 <template>
-  <div>首页</div>
+  <div class='main-page'>
+    <el-card>
+      <h2>首页</h2>
+    </el-card>
+  </div>
 </template>
 
 <style scoped></style>

@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>菜单列表</div>
+  <div class='main-page'>菜单列表</div>
 </template>
 
 <style scoped></style>
