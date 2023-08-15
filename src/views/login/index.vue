@@ -1,4 +1,5 @@
 <script lang='ts' setup>
+  import LoginForm from './components/LoginForm.vue'
 </script>
 
 <template>
@@ -20,7 +21,7 @@
         <h2 class='title'>后台管理系统</h2>
 
         <!-- 登录表单组件 start -->
-
+        <LoginForm />
         <!-- 登录表单组件 end -->
       </div>
       <!-- 登录表单 end -->
