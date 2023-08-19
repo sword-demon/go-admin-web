@@ -5,11 +5,22 @@
   defineOptions({ name: 'UserList' })
 
   const searchForm = reactive({
+    // 搜索关键字
     keyword: '',
+    // 当前页码
+    currentPage: 1,
+    // 每页多少
+    pageSize: 10,
   })
 
+  // 表格数据加载
   const loading = ref(false)
+  // 表格数据
   const tableData = ref([])
+  // 表格总数
+  const total = ref(0)
+  // 导出加载 loading
+  const exportLoading = ref(false)
 
   const search = () => {
   }
@@ -17,6 +28,9 @@
   const handleAddUser = () => {
   }
   const exportData = () => {
+    exportLoading.value = true
+
+    exportLoading.value = false
   }
 
   const refresh = () => {
@@ -39,6 +53,14 @@
         message: '已取消',
       })
     })
+  }
+
+  const handleSizeChange = (val) => {
+    searchForm.pageSize = val
+  }
+
+  const handleCurrentChange = (val) => {
+    searchForm.currentPage = val
   }
 </script>
 
@@ -69,7 +91,7 @@
                   </el-icon>
                   添加用户
                 </el-button>
-                <el-button type='success' plain style='width: 50%' @click='exportData'>
+                <el-button :loading='exportLoading' type='success' plain style='width: 50%' @click='exportData'>
                   <el-icon>
                     <Download />
                   </el-icon>
@@ -115,6 +137,20 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <!-- 分页组件 start -->
+      <el-pagination
+        v-model:current-page='searchForm.currentPage'
+        v-model:page-size='searchForm.pageSize'
+        :page-sizes='[10, 50, 100, 200]'
+        small
+        background
+        layout='total, sizes, prev, pager, next, jumper'
+        :total='total'
+        @size-change='handleSizeChange'
+        @current-change='handleCurrentChange'
+      />
+      <!-- 分页组件 end -->
     </div>
     <!-- 表格区域 end -->
   </el-card>
@@ -145,5 +181,15 @@
   .my-button {
     display: flex;
     justify-content: space-between;
+  }
+
+  /*自定义分页样式*/
+  .el-pagination {
+    margin-top: 20px;
+    justify-content: center;
+  }
+
+  :deep(.el-pagination.is-background .el-pager li:not(.is-disabled).is-active) {
+    background-color: #053346;
   }
 </style>
