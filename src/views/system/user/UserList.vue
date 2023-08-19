@@ -1,11 +1,15 @@
 <script lang='ts' setup>
-  import { reactive } from 'vue'
+  import { reactive, ref } from 'vue'
+  import { ElMessage, ElMessageBox } from 'element-plus'
 
   defineOptions({ name: 'UserList' })
 
   const searchForm = reactive({
     keyword: '',
   })
+
+  const loading = ref(false)
+  const tableData = ref([])
 
   const search = () => {
   }
@@ -16,6 +20,25 @@
   }
 
   const refresh = () => {
+  }
+
+  const handleEdit = (id: number) => {
+
+  }
+
+  const handleDelete = (id: number) => {
+    ElMessageBox.confirm('确认删除用户?', 'Warning', {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }).then(() => {
+      // 调用删除接口
+    }).catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '已取消',
+      })
+    })
   }
 </script>
 
@@ -55,7 +78,7 @@
               </div>
             </el-col>
             <el-col :span='3'
-                    style='display: inline-flex;justify-content: center;align-content: center;cursor: pointer'>
+                    style='display: inline-flex;justify-content: center;align-items: center;cursor: pointer'>
               <el-icon style='font-size: 20px;' @click='refresh'>
                 <Refresh />
               </el-icon>
@@ -65,6 +88,35 @@
         <!-- 搜索区域 end -->
       </div>
     </template>
+
+    <!-- 表格区域 start -->
+    <div class='table-box'>
+      <el-table element-loading-text='数据加载中...' v-loading='loading' :data='tableData'
+                style='width: 100%;text-align: center' :cell-style='{textAlign: "center"}'
+                :header-cell-style='{fontSize: "15px", textAlign: "center"}'>
+        <el-table-column label='序号' width='100' type='index' prop='id'></el-table-column>
+        <el-table-column label='头像'>
+          <template #default='scope'>
+            <el-tooltip v-if='scope.row.avatar !== ""' :content='scope.row.avatar' placement='top'
+                        effect='light'>
+              <img :src='scope.row.avatar' style='width: 64px;height: 40px;' />
+            </el-tooltip>
+            <el-tag v-else type='warning'>未上传头像</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label='用户名称' prop='username'></el-table-column>
+        <el-table-column label='手机号码' prop='phone'></el-table-column>
+        <el-table-column label='创建时间' prop='created_at'></el-table-column>
+        <el-table-column label='更新时间' prop='updated_at'></el-table-column>
+        <el-table-column label='操作'>
+          <template #default='scope'>
+            <el-button type='primary' @click='handleEdit(scope.row.id)'>编辑</el-button>
+            <el-button type='danger' @click='handleDelete(scope.row.id)'>删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <!-- 表格区域 end -->
   </el-card>
 </template>
 
@@ -88,5 +140,10 @@
     display: inline-flex;
     justify-content: center;
     align-content: center;
+  }
+
+  .my-button {
+    display: flex;
+    justify-content: space-between;
   }
 </style>
