@@ -4,6 +4,7 @@
   import { deleteUserApi, detailUserApi, getUserListApi } from '@/api/system/user.ts'
   import { formatTime } from '@/utils/dateUtils'
   import UserForm from '@/views/system/user/components/UserForm.vue'
+  import { exportExcel } from '@/utils/excelUtils'
 
   defineOptions({ name: 'UserList' })
 
@@ -85,12 +86,27 @@
     search()
   }
 
+  // 需要导出的列名
+  const columns = [
+    { name: 'id', label: '用户 ID' },
+    { name: 'username', label: '用户名称' },
+    { name: 'phone', label: '手机号码' },
+    { name: 'email', label: '邮箱' },
+    { name: 'remarks', label: '备注' },
+  ]
+
   /**
    * 导出用户
    */
-  const exportData = () => {
+  const exportData = async () => {
     exportLoading.value = true
-
+    await exportExcel({
+      column: columns,
+      data: tableData.value,
+      filename: '管理员数据导出',
+      format: 'xlsx',
+      auto_width: true,
+    })
     exportLoading.value = false
   }
 
