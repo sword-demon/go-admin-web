@@ -121,14 +121,14 @@
     border: none;
   }
 
-  :deep(.el-tabs .el-tabs__header .el-tabs__item) {
+  :deep(.el-tabs .el-tabs__header .el-tabs__item ) {
     border: none;
     color: #cccccc;
   }
 
-  :deep(.el-tabs .el-tabs__header .el-tabs__item.is-active) {
-    border-bottom: 2px solid #e99d53;
+  :deep(.el-tabs .el-tabs__header .el-tabs__item.is-active ) {
     color: #e99d53;
+    border-bottom: 2px solid #e99d53;
   }
 
 </style>

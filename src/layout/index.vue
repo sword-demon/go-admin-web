@@ -40,7 +40,7 @@
   .el-header {
     --el-header-padding: 0px;
     --el-header-height: auto;
-    height: 80px;
+    height: 111px;
     background: #F3F3F3;
   }
 
@@ -62,6 +62,7 @@
     right: 0;
     margin: auto;
     background-color: white;
+    border-radius: 15px;
     overflow: hidden;
   }
 
