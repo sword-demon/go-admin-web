@@ -2,8 +2,29 @@
   import CollapseIcon from './components/CollapseIcon.vue'
   import BreadCrumb from './components/BreadCrumb.vue'
   import Tags from '@/layout/tags/index.vue'
+  import { useAuthorization, useRefreshToken } from '@/composables/authorization'
+  import { useRouter } from 'vue-router'
 
   defineOptions({ name: 'TopBar' })
+
+  const router = useRouter()
+
+  // 退出操作
+  const exit = () => {
+    // 清除 token 数据
+    const authorization = useAuthorization()
+    authorization.value = null
+
+    // 清除 refresh_token
+    const refresh_token = useRefreshToken()
+    refresh_token.value = null
+
+    // 清除当前用户的菜单数据
+    window.localStorage.removeItem('menuState')
+
+    // 返回到登录页面
+    router.push({ path: '/login' })
+  }
 </script>
 
 <template>
@@ -46,7 +67,7 @@
 
       <!-- 退出系统 start -->
       <el-popconfirm confirm-button-text='确认' cancel-button-text='取消' icon='SwitchButton' icon-color='#30bcd7'
-                     title='确认退出系统吗'>
+                     title='确认退出系统吗' @confirm='exit'>
         <template #reference>
           <el-link :underline='false'>
             <el-icon>

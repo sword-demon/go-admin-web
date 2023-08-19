@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { close, start } from '@/config/nprogress'
 import useMenuStore from '@/store/modules/menu'
+import { useAuthorization } from '@/composables/authorization.ts'
 
 // 定义路由和组件的映射关系
 const modules = import.meta.glob('@/views/**/**.vue')
@@ -41,12 +42,32 @@ const router = createRouter({
 // 防止首次或者刷新界面路由失效问题
 let registerRouteFresh = true
 
+// 白名单路由
+const whiteList = ['/login']
+
 // 路由前置守卫
 // @ts-ignore
 router.beforeEach(async (to, from, next) => {
   // console.log(from)
   // 打开进度条
   start()
+
+  const token = useAuthorization()
+  // 如果是白名单的路径，直接放行
+  const some = whiteList.some((item) => to.path.indexOf(item) !== -1)
+  if (some && !token.value) {
+    next()
+  }
+
+  // 判断是否已经登录
+  if (!token.value) {
+    next({ path: `/login?redirect=${to.path}`, replace: true })
+  }
+
+  // 已经登录 如果访问的路径是登录页面就让他跳转到首页
+  if (to.path === '/login') {
+    next({ path: '/home', replace: true })
+  }
 
   // 菜单信息
   const menuStore = useMenuStore()
