@@ -1,6 +1,7 @@
 <script lang='ts' setup>
-  import { reactive, ref } from 'vue'
+  import { onMounted, reactive, ref } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
+  import { getUserListApi } from '@/api/system/user.ts'
 
   defineOptions({ name: 'UserList' })
 
@@ -22,8 +23,37 @@
   // 导出加载 loading
   const exportLoading = ref(false)
 
-  const search = () => {
+  const search = async () => {
+    loading.value = true
+    // 清空表数据
+    tableData.value = []
+    const { code, data, msg } = await getUserListApi({
+      keyword: searchForm.keyword,
+      page: searchForm.currentPage,
+      size: searchForm.pageSize,
+    })
+    if (code !== 200) {
+      ElMessage({
+        type: 'error',
+        message: msg,
+      })
+      loading.value = false
+      return
+    }
+    ElMessage({
+      type: 'success',
+      message: msg,
+      duration: 500,
+    })
+    total.value = data.count
+    tableData.value = data.list
+    loading.value = false
   }
+
+  // 挂在后里面加载列表数据
+  onMounted(() => {
+    search()
+  })
 
   const handleAddUser = () => {
   }
@@ -34,6 +64,7 @@
   }
 
   const refresh = () => {
+    search()
   }
 
   const handleEdit = (id: number) => {
@@ -57,10 +88,12 @@
 
   const handleSizeChange = (val) => {
     searchForm.pageSize = val
+    search()
   }
 
   const handleCurrentChange = (val) => {
     searchForm.currentPage = val
+    search()
   }
 </script>
 
