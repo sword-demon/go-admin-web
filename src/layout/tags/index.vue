@@ -127,8 +127,8 @@
   }
 
   :deep(.el-tabs .el-tabs__header .el-tabs__item.is-active ) {
-    color: #e99d53;
-    border-bottom: 2px solid #e99d53;
+    color: #0a119d;
+    border-bottom: 2px solid #033f3f;
   }
 
 </style>

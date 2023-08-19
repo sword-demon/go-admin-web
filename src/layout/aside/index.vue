@@ -22,8 +22,10 @@
            :default-openeds='[route.path]' class='el-menu-vertical-demo' :collapse='!settingStore.isCollapse'
            :collapse-transition='true'>
     <!-- logo start -->
-    <div class='imageBox' v-if='settingStore.isCollapse'>
-      <img src='@/assets/logo01.png' alt='logo'>
+    <div class='imageBox' v-if='settingStore.isCollapse'
+         style='display: flex;justify-content: space-between;align-items: center;'>
+      <img src='@/assets/vue.svg' alt='logo' style='width: 64px;'>
+      <span>无解的游戏</span>
     </div>
     <!-- logo end -->
 

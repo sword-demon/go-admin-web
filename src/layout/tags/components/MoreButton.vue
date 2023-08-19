@@ -1,15 +1,13 @@
 <script lang='ts' setup>
-  import useSettingStore from '@/store/modules/setting'
   import useTagsStore from '@/store/modules/tags'
   import { useRoute, useRouter } from 'vue-router'
-  import { computed } from 'vue'
 
-  const settingStore = useSettingStore()
+  // const settingStore = useSettingStore()
   const tagStore = useTagsStore()
   const route = useRoute()
   const router = useRouter()
 
-  const visitedViews = computed(() => tagStore.visitedViews)
+  // const visitedViews = computed(() => tagStore.visitedViews)
 
   // 关闭其他标签
   const closeOtherTab = async () => {
