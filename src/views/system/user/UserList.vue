@@ -2,6 +2,7 @@
   import { onMounted, reactive, ref } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
   import { getUserListApi } from '@/api/system/user.ts'
+  import { formatTime } from '@/utils/dateUtils'
 
   defineOptions({ name: 'UserList' })
 
@@ -150,19 +151,24 @@
                 style='width: 100%;text-align: center' :cell-style='{textAlign: "center"}'
                 :header-cell-style='{fontSize: "15px", textAlign: "center"}'>
         <el-table-column label='序号' width='100' type='index' prop='id'></el-table-column>
-        <el-table-column label='头像'>
+        <el-table-column label='头像' prop='avatar'>
           <template #default='scope'>
-            <el-tooltip v-if='scope.row.avatar !== ""' :content='scope.row.avatar' placement='top'
-                        effect='light'>
-              <img :src='scope.row.avatar' style='width: 64px;height: 40px;' />
-            </el-tooltip>
+            <el-avatar v-if='scope.row.avatar !== ""' :src='scope.row.avatar'></el-avatar>
             <el-tag v-else type='warning'>未上传头像</el-tag>
           </template>
         </el-table-column>
         <el-table-column label='用户名称' prop='username'></el-table-column>
         <el-table-column label='手机号码' prop='phone'></el-table-column>
-        <el-table-column label='创建时间' prop='created_at'></el-table-column>
-        <el-table-column label='更新时间' prop='updated_at'></el-table-column>
+        <el-table-column label='创建时间'>
+          <template #default='scope'>
+            <span>{{ formatTime(scope.row.created_at, 'yyyy-MM-dd HH:mm:ss') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label='更新时间' prop='updated_at'>
+          <template #default='scope'>
+            <span>{{ formatTime(scope.row.updated_at, 'yyyy-MM-dd HH:mm:ss') }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label='操作'>
           <template #default='scope'>
             <el-button type='primary' @click='handleEdit(scope.row.id)'>编辑</el-button>
