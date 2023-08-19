@@ -52,10 +52,13 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
+  const isAdmin = () => userInfo.value?.id === 1
+
   return {
     userInfo,
     token,
     refresh_token,
+    isAdmin,
     login,
     setUserInfo,
     getUserInfo,

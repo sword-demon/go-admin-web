@@ -1,11 +1,16 @@
 <script lang='ts' setup>
-  import { reactive, ref } from 'vue'
+  import { reactive, ref, watch } from 'vue'
   import type { FormInstance, FormRules } from 'element-plus'
   import { ElMessage } from 'element-plus'
-  import { addUserApi } from '@/api/system/user'
+  import { addUserApi, updateUserApi, UpdateUserRequest } from '@/api/system/user'
+
+  const props = defineProps<{
+    userInfo: UpdateUserRequest
+  }>()
 
   // 表单提交内容
   const userForm = reactive({
+    id: 0,
     username: '',
     // 默认密码
     password: '123456',
@@ -13,6 +18,11 @@
     remarks: '',
     email: '',
   })
+
+  watch(() => props.userInfo, (newValue) => {
+    // console.log('newValue', newValue)
+    Object.assign(userForm, newValue)
+  }, { immediate: true })
 
   // 表单提交实例
   const userFormRef = ref<FormInstance>()
@@ -37,26 +47,55 @@
     submitLoading.value = true
     formEl.validate(async (valid) => {
       if (valid) {
-        // 无 data 返回值
-        const { code, msg } = await addUserApi({ ...userForm })
-        if (code !== 200) {
+        if (userForm.id > 0) {
+          // 无 data 返回值
+          const { code, msg } = await updateUserApi({ ...userForm })
+          if (code !== 200) {
+            ElMessage({
+              type: 'error',
+              message: msg,
+            })
+            submitLoading.value = false
+            return
+          }
+
           ElMessage({
-            type: 'error',
+            type: 'success',
             message: msg,
+            duration: 2000,
           })
           submitLoading.value = false
+          // 通知父组件关闭弹窗
+          emit('submitSuccess')
+          return
+        } else {
+          // 无 data 返回值
+          const { code, msg } = await addUserApi({
+            username: userForm.username,
+            password: userForm.password,
+            phone: userForm.phone,
+            remarks: userForm.remarks,
+            email: userForm.email,
+          })
+          if (code !== 200) {
+            ElMessage({
+              type: 'error',
+              message: msg,
+            })
+            submitLoading.value = false
+            return
+          }
+
+          ElMessage({
+            type: 'success',
+            message: msg,
+            duration: 2000,
+          })
+          submitLoading.value = false
+          // 通知父组件关闭弹窗
+          emit('submitSuccess')
           return
         }
-
-        ElMessage({
-          type: 'success',
-          message: msg,
-          duration: 2000,
-        })
-        submitLoading.value = false
-        // 通知父组件关闭弹窗
-        emit('submitSuccess')
-        return
       } else {
         ElMessage({
           type: 'error',

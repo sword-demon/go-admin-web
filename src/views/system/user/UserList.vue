@@ -4,7 +4,6 @@
   import { deleteUserApi, detailUserApi, getUserListApi } from '@/api/system/user.ts'
   import { formatTime } from '@/utils/dateUtils'
   import UserForm from '@/views/system/user/components/UserForm.vue'
-  import EditUser from '@/views/system/user/components/EditUser.vue'
 
   defineOptions({ name: 'UserList' })
 
@@ -57,10 +56,12 @@
     search()
   })
 
+  const userInfo = ref()
   // 添加用户
   const handleAddUser = () => {
     dialogFormVisible.value = true
     dialogFormTitle.value = '添加管理员'
+    userInfo.value = {}
   }
 
   // 关闭新增管理员弹框
@@ -103,11 +104,13 @@
     search()
   }
 
-  const userInfo = ref()
+
   const editDialog = ref(false)
   const editDialogTitle = ref('')
   const handleEdit = async (id: number) => {
     editDialog.value = true
+    dialogFormVisible.value = true
+    dialogFormTitle.value = '编辑管理员'
     editDialogTitle.value = '编辑管理员'
     const { code, data, msg } = await detailUserApi(id)
     if (code !== 200) {
@@ -116,6 +119,7 @@
         message: msg,
       })
       editDialog.value = false
+      dialogFormVisible.value = false
       return
     }
     ElMessage({
@@ -265,12 +269,12 @@
 
   <el-dialog v-model='dialogFormVisible' :title='dialogFormTitle' destroy-on-close align-center
              width='50%'>
-    <UserForm @closeUserForm='closeUserForm' @submitSuccess='submitSuccess' />
+    <UserForm :userInfo='userInfo' @closeUserForm='closeUserForm' @submitSuccess='submitSuccess' />
   </el-dialog>
-  <el-dialog v-model='editDialog' :title='editDialogTitle' destroy-on-close align-center
-             width='50%'>
-    <EditUser :userInfo='userInfo' @closeEditUser='closeEditUser' @editSuccess='editSuccess' />
-  </el-dialog>
+  <!--  <el-dialog v-model='editDialog' :title='editDialogTitle' destroy-on-close align-center-->
+  <!--             width='50%'>-->
+  <!--    <EditUser :userInfo='userInfo' @closeEditUser='closeEditUser' @editSuccess='editSuccess' />-->
+  <!--  </el-dialog>-->
 </template>
 
 <style scoped>

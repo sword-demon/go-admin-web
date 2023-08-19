@@ -11,7 +11,8 @@ export interface LoginFormResponse {
 }
 
 export interface UserInfo {
-  avatar?: string,
-  nickname?: string,
-  sex?: number,
+  id?: number
+  avatar?: string
+  nickname?: string
+  sex?: number
 }
