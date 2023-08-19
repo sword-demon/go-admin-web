@@ -1,7 +1,7 @@
 <script lang='ts' setup>
   import { onMounted, reactive, ref } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
-  import { getUserListApi } from '@/api/system/user.ts'
+  import { detailUserApi, getUserListApi } from '@/api/system/user.ts'
   import { formatTime } from '@/utils/dateUtils'
   import UserForm from '@/views/system/user/components/UserForm.vue'
 
@@ -92,8 +92,23 @@
     search()
   }
 
-  const handleEdit = (row: any) => {
-
+  const handleEdit = async (id: number) => {
+    dialogFormVisible.value = true
+    dialogFormTitle.value = '编辑管理员'
+    const { code, data, msg } = await detailUserApi(id)
+    if (code !== 200) {
+      ElMessage({
+        type: 'error',
+        message: msg,
+      })
+      dialogFormVisible.value = false
+      return
+    }
+    ElMessage({
+      type: 'success',
+      message: msg,
+    })
+    console.log('data', data)
   }
 
   const handleDelete = (id: number) => {
@@ -195,7 +210,7 @@
         </el-table-column>
         <el-table-column label='操作'>
           <template #default='scope'>
-            <el-button type='primary' @click='handleEdit(scope.row)'>编辑</el-button>
+            <el-button type='primary' @click='handleEdit(scope.row.id)'>编辑</el-button>
             <el-button type='danger' @click='handleDelete(scope.row.id)'>删除</el-button>
           </template>
         </el-table-column>

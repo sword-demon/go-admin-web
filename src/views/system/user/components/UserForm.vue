@@ -4,6 +4,7 @@
   import { ElMessage } from 'element-plus'
   import { addUserApi } from '@/api/system/user'
 
+  // 表单提交内容
   const userForm = reactive({
     username: '',
     // 默认密码
@@ -13,7 +14,9 @@
     email: '',
   })
 
+  // 表单提交实例
   const userFormRef = ref<FormInstance>()
+  // 表单提交规则
   const rules = reactive<FormRules>({
     username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
     password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
@@ -25,7 +28,10 @@
   // 调用父组件的关闭弹窗事件后刷新列表页
   const emit = defineEmits(['closeUserForm', 'submitSuccess'])
 
+  // 提交 loading
   const submitLoading = ref(false)
+
+  // 提交用户信息
   const submitUser = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     submitLoading.value = true
