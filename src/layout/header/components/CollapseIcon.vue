@@ -9,10 +9,10 @@
 
 <template>
   <div class='hamburger-container' @click='handleCollapse'>
-    <el-icon class='icon' color='#e99d53' v-if='settingStore.isCollapse'>
+    <el-icon class='icon' v-if='settingStore.isCollapse'>
       <Expand />
     </el-icon>
-    <el-icon class='icon' color='#e99d53' v-else>
+    <el-icon class='icon' v-else>
       <Fold />
     </el-icon>
   </div>

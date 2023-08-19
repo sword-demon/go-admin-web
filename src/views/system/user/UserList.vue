@@ -3,6 +3,7 @@
   import { ElMessage, ElMessageBox } from 'element-plus'
   import { getUserListApi } from '@/api/system/user.ts'
   import { formatTime } from '@/utils/dateUtils'
+  import UserForm from '@/views/system/user/components/UserForm.vue'
 
   defineOptions({ name: 'UserList' })
 
@@ -23,13 +24,17 @@
   const total = ref(0)
   // 导出加载 loading
   const exportLoading = ref(false)
+  // 打开弹窗
+  const dialogFormVisible = ref(false)
+  // 弹窗标题
+  const dialogFormTitle = ref('')
 
   const search = async () => {
     loading.value = true
     // 清空表数据
     tableData.value = []
     const { code, data, msg } = await getUserListApi({
-      keyword: searchForm.keyword,
+      keyword: searchForm.keyword.trim(),
       page: searchForm.currentPage,
       size: searchForm.pageSize,
     })
@@ -41,11 +46,6 @@
       loading.value = false
       return
     }
-    ElMessage({
-      type: 'success',
-      message: msg,
-      duration: 500,
-    })
     total.value = data.count
     tableData.value = data.list
     loading.value = false
@@ -56,24 +56,48 @@
     search()
   })
 
+  // 添加用户
   const handleAddUser = () => {
+    dialogFormVisible.value = true
+    dialogFormTitle.value = '添加管理员'
   }
+
+  // 关闭新增管理员弹框
+  const closeUserForm = () => {
+    dialogFormVisible.value = false
+  }
+
+  const submitSuccess = () => {
+    // 关闭弹窗并刷新列表
+    dialogFormVisible.value = false
+    search()
+  }
+
+  /**
+   * 导出用户
+   */
   const exportData = () => {
     exportLoading.value = true
 
     exportLoading.value = false
   }
 
+  /**
+   * 刷新按钮
+   */
   const refresh = () => {
+    // 重置查询关键字为空
+    searchForm.keyword = ''
+    // 查询列表接口
     search()
   }
 
-  const handleEdit = (id: number) => {
+  const handleEdit = (row: any) => {
 
   }
 
   const handleDelete = (id: number) => {
-    ElMessageBox.confirm('确认删除用户?', 'Warning', {
+    ElMessageBox.confirm('确认删除用户?', '删除用户', {
       confirmButtonText: '确认',
       cancelButtonText: '取消',
       type: 'warning',
@@ -87,12 +111,12 @@
     })
   }
 
-  const handleSizeChange = (val) => {
+  const handleSizeChange = (val: number) => {
     searchForm.pageSize = val
     search()
   }
 
-  const handleCurrentChange = (val) => {
+  const handleCurrentChange = (val: number) => {
     searchForm.currentPage = val
     search()
   }
@@ -115,7 +139,7 @@
           <el-row :gutter='10'>
             <el-col :span='11'>
               <el-input prefix-icon='Search' v-model='searchForm.keyword' @keyup.enter.native='search'
-                        placeholder='关键字搜索'></el-input>
+                        placeholder='关键字搜索(回车搜索)'></el-input>
             </el-col>
             <el-col :span='10'>
               <div class='my-button'>
@@ -150,7 +174,7 @@
       <el-table element-loading-text='数据加载中...' v-loading='loading' :data='tableData'
                 style='width: 100%;text-align: center' :cell-style='{textAlign: "center"}'
                 :header-cell-style='{fontSize: "15px", textAlign: "center"}'>
-        <el-table-column label='序号' width='100' type='index' prop='id'></el-table-column>
+        <el-table-column label='序号' prop='id'></el-table-column>
         <el-table-column label='头像' prop='avatar'>
           <template #default='scope'>
             <el-avatar v-if='scope.row.avatar !== ""' :src='scope.row.avatar'></el-avatar>
@@ -171,7 +195,7 @@
         </el-table-column>
         <el-table-column label='操作'>
           <template #default='scope'>
-            <el-button type='primary' @click='handleEdit(scope.row.id)'>编辑</el-button>
+            <el-button type='primary' @click='handleEdit(scope.row)'>编辑</el-button>
             <el-button type='danger' @click='handleDelete(scope.row.id)'>删除</el-button>
           </template>
         </el-table-column>
@@ -193,6 +217,11 @@
     </div>
     <!-- 表格区域 end -->
   </el-card>
+
+  <el-dialog v-model='dialogFormVisible' :title='dialogFormTitle' destroy-on-close align-center
+             width='50%'>
+    <UserForm @closeUserForm='closeUserForm' @submitSuccess='submitSuccess' />
+  </el-dialog>
 </template>
 
 <style scoped>

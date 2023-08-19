@@ -114,7 +114,7 @@
   }
 
   :deep(.el-tabs) {
-    border-top: 1px solid #e99d53;
+    border-top: 1px solid #107c94;
   }
 
   :deep(.el-tabs .el-tabs__nav) {

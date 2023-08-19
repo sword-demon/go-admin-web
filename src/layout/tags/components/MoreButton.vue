@@ -25,7 +25,7 @@
 
 <template>
   <el-dropdown trigger='hover'>
-    <el-button size='small' color='#e99d53'>
+    <el-button size='small' type='primary'>
       <span class='more'>更多</span>
       <el-icon>
         <ArrowDown />
