@@ -48,7 +48,6 @@
       if (valid) {
         // 无 data 返回值
         const { code, msg } = await updateUserApi({ ...userForm })
-        console.log(code, msg)
         if (code !== 200) {
           ElMessage({
             type: 'error',

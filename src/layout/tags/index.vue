@@ -36,7 +36,6 @@
 
   // 点击tabs 标签事件
   const tabClick = (tabItem: TabsPaneContext) => {
-    console.log('tabItem', tabItem)
     let path = tabItem.props.name as string
     router.push(path)
   }

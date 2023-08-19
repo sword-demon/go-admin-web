@@ -1,5 +1,5 @@
 // 获取树形菜单列表
-import { useGet, usePost, usePut } from '@/utils/request'
+import { useDelete, useGet, usePost, usePut } from '@/utils/request'
 
 const restFulUserUrl = '/user'
 const userDetailUrl = '/user/detail'
@@ -33,4 +33,7 @@ export const updateUserApi = (params: UpdateUserRequest) => {
 
 export const detailUserApi = (id: number) => {
   return useGet<any, UserDetail>(userDetailUrl, { id: id })
+}
+export const deleteUserApi = (id: number) => {
+  return useDelete(restFulUserUrl + '/' + id)
 }

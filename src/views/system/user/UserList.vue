@@ -1,7 +1,7 @@
 <script lang='ts' setup>
   import { onMounted, reactive, ref } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
-  import { detailUserApi, getUserListApi } from '@/api/system/user.ts'
+  import { deleteUserApi, detailUserApi, getUserListApi } from '@/api/system/user.ts'
   import { formatTime } from '@/utils/dateUtils'
   import UserForm from '@/views/system/user/components/UserForm.vue'
   import EditUser from '@/views/system/user/components/EditUser.vue'
@@ -125,13 +125,29 @@
     userInfo.value = data
   }
 
+  // 删除用户
   const handleDelete = (id: number) => {
     ElMessageBox.confirm('确认删除用户?', '删除用户', {
       confirmButtonText: '确认',
       cancelButtonText: '取消',
       type: 'warning',
-    }).then(() => {
+    }).then(async () => {
       // 调用删除接口
+      const { code, msg } = await deleteUserApi(id)
+      if (code !== 200) {
+        ElMessage({
+          type: 'error',
+          message: msg,
+        })
+        return
+      }
+
+      ElMessage({
+        type: 'success',
+        message: msg,
+      })
+
+      await search()
     }).catch(() => {
       ElMessage({
         type: 'info',
