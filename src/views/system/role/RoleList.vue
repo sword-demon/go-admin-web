@@ -1,9 +1,10 @@
 <script lang='ts' setup>
   import { onMounted, reactive, ref } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
-  import { deleteUserApi, detailUserApi, getUserListApi } from '@/api/system/user.ts'
+  import { deleteRoleApi, detailRoleApi, getRoleListApi } from '@/api/system/role'
   import { formatTime } from '@/utils/dateUtils'
   import { exportExcel } from '@/utils/excelUtils'
+  import RoleForm from '@/views/system/role/components/RoleForm.vue'
 
   defineOptions({ name: 'RoleList' })
 
@@ -33,7 +34,7 @@
     loading.value = true
     // 清空表数据
     tableData.value = []
-    const { code, data, msg } = await getUserListApi({
+    const { code, data, msg } = await getRoleListApi({
       keyword: searchForm.keyword.trim(),
       page: searchForm.currentPage,
       size: searchForm.pageSize,
@@ -56,16 +57,16 @@
     search()
   })
 
-  const userInfo = ref()
+  const roleInfo = ref()
   // 添加角色
-  const handleAddUser = () => {
+  const handleAddRole = () => {
     dialogFormVisible.value = true
     dialogFormTitle.value = '添加角色'
-    userInfo.value = {}
+    roleInfo.value = {}
   }
 
-  // 关闭新增管理员弹框
-  const closeUserForm = () => {
+  // 关闭新增角色弹框
+  const closeForm = () => {
     dialogFormVisible.value = false
   }
 
@@ -74,24 +75,13 @@
     dialogFormVisible.value = false
     search()
   }
-  // 关闭新增管理员弹框
-  const closeEditUser = () => {
-    editDialog.value = false
-  }
-
-  const editSuccess = () => {
-    // 关闭弹窗并刷新列表
-    editDialog.value = false
-    search()
-  }
 
   // 需要导出的列名
   const columns = [
     { name: 'id', label: '角色 ID' },
-    { name: 'username', label: '角色名称' },
-    { name: 'phone', label: '手机号码' },
-    { name: 'email', label: '邮箱' },
+    { name: 'name', label: '角色名称' },
     { name: 'remarks', label: '备注' },
+    { name: 'sort', label: '排序' },
   ]
 
   /**
@@ -119,21 +109,16 @@
     search()
   }
 
-
-  const editDialog = ref(false)
-  const editDialogTitle = ref('')
+  // 编辑角色
   const handleEdit = async (id: number) => {
-    editDialog.value = true
     dialogFormVisible.value = true
-    dialogFormTitle.value = '编辑管理员'
-    editDialogTitle.value = '编辑管理员'
-    const { code, data, msg } = await detailUserApi(id)
+    dialogFormTitle.value = '编辑角色'
+    const { code, data, msg } = await detailRoleApi(id)
     if (code !== 200) {
       ElMessage({
         type: 'error',
         message: msg,
       })
-      editDialog.value = false
       dialogFormVisible.value = false
       return
     }
@@ -141,7 +126,7 @@
       type: 'success',
       message: msg,
     })
-    userInfo.value = data
+    roleInfo.value = data
   }
 
   // 删除角色
@@ -152,7 +137,7 @@
       type: 'warning',
     }).then(async () => {
       // 调用删除接口
-      const { code, msg } = await deleteUserApi(id)
+      const { code, msg } = await deleteRoleApi(id)
       if (code !== 200) {
         ElMessage({
           type: 'error',
@@ -191,13 +176,6 @@
     <!-- 头部布局 -->
     <template #header>
       <div class='card-header'>
-        <h3>
-          <el-icon style='margin-right: 10px'>
-            <UserFilled />
-          </el-icon>
-          角色管理
-        </h3>
-
         <!-- 搜索区域 start -->
         <div class='card-search'>
           <el-row :gutter='10'>
@@ -207,7 +185,7 @@
             </el-col>
             <el-col :span='10'>
               <div class='my-button'>
-                <el-button type='primary' plain style='width: 50%' @click='handleAddUser'>
+                <el-button type='primary' plain style='width: 50%' @click='handleAddRole'>
                   <el-icon>
                     <Plus />
                   </el-icon>
@@ -239,14 +217,9 @@
                 style='width: 100%;text-align: center' :cell-style='{textAlign: "center"}'
                 :header-cell-style='{fontSize: "15px", textAlign: "center"}'>
         <el-table-column label='序号' prop='id'></el-table-column>
-        <el-table-column label='头像' prop='avatar'>
-          <template #default='scope'>
-            <el-avatar v-if='scope.row.avatar !== ""' :src='scope.row.avatar'></el-avatar>
-            <el-tag v-else type='warning'>未上传头像</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label='角色名称' prop='username'></el-table-column>
-        <el-table-column label='手机号码' prop='phone'></el-table-column>
+        <el-table-column label='角色名称' prop='name'></el-table-column>
+        <el-table-column label='是否是超级管理员' prop='is_admin'></el-table-column>
+        <el-table-column label='排序' prop='sort'></el-table-column>
         <el-table-column label='创建时间'>
           <template #default='scope'>
             <span>{{ formatTime(scope.row.created_at, 'yyyy-MM-dd HH:mm:ss') }}</span>
@@ -279,6 +252,10 @@
       />
       <!-- 分页组件 end -->
     </div>
+
+    <el-dialog v-model='dialogFormVisible' :title='dialogFormTitle' destroy-on-close align-center width='50%'>
+      <RoleForm @closeForm='closeForm' @submitSuccess='submitSuccess' />
+    </el-dialog>
     <!-- 表格区域 end -->
   </el-card>
 </template>

@@ -65,6 +65,30 @@
     userInfo.value = {}
   }
 
+  const editDialog = ref(false)
+  const editDialogTitle = ref('')
+  const handleEdit = async (id: number) => {
+    editDialog.value = true
+    dialogFormVisible.value = true
+    dialogFormTitle.value = '编辑管理员'
+    editDialogTitle.value = '编辑管理员'
+    const { code, data, msg } = await detailUserApi(id)
+    if (code !== 200) {
+      ElMessage({
+        type: 'error',
+        message: msg,
+      })
+      editDialog.value = false
+      dialogFormVisible.value = false
+      return
+    }
+    ElMessage({
+      type: 'success',
+      message: msg,
+    })
+    userInfo.value = data
+  }
+
   // 关闭新增管理员弹框
   const closeUserForm = () => {
     dialogFormVisible.value = false
@@ -120,30 +144,6 @@
     search()
   }
 
-
-  const editDialog = ref(false)
-  const editDialogTitle = ref('')
-  const handleEdit = async (id: number) => {
-    editDialog.value = true
-    dialogFormVisible.value = true
-    dialogFormTitle.value = '编辑管理员'
-    editDialogTitle.value = '编辑管理员'
-    const { code, data, msg } = await detailUserApi(id)
-    if (code !== 200) {
-      ElMessage({
-        type: 'error',
-        message: msg,
-      })
-      editDialog.value = false
-      dialogFormVisible.value = false
-      return
-    }
-    ElMessage({
-      type: 'success',
-      message: msg,
-    })
-    userInfo.value = data
-  }
 
   // 删除用户
   const handleDelete = (id: number) => {
