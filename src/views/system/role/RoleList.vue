@@ -176,6 +176,12 @@
     <!-- 头部布局 -->
     <template #header>
       <div class='card-header'>
+        <h3>
+          <el-icon style='margin-right: 10px;'>
+            <Stamp />
+          </el-icon>
+          角色管理
+        </h3>
         <!-- 搜索区域 start -->
         <div class='card-search'>
           <el-row :gutter='10'>

@@ -1,6 +1,9 @@
 <script lang='ts' setup>
   import { reactive, ref } from 'vue'
-  import { FormInstance, FormRules } from 'element-plus'
+  import { ElMessage, FormInstance, FormRules } from 'element-plus'
+  import { addRoleApi } from '@/api/system/role.ts'
+
+  defineOptions({ name: 'RoleForm' })
 
   const emit = defineEmits(['closeForm', 'submitSuccess'])
 
@@ -15,8 +18,6 @@
 
   const rules = reactive<FormRules>({
     name: [{ required: true, message: '角色名称不能为空' }],
-    sort: [{ required: true, min: 1, message: '排序不能为空，且最小值为 1' }],
-    is_admin: [{ min: 0, max: 1, message: '是否是超管参数错误' }],
     remarks: [{ max: 200, message: '内容最大 200 个字符' }],
   })
 
@@ -24,7 +25,39 @@
   const submitForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     submitLoading.value = true
+    formEl.validate(async (valid) => {
+      if (valid) {
+        const { code, msg } = await addRoleApi({
+          name: roleForm.name,
+          sort: roleForm.sort,
+          is_admin: roleForm.is_admin,
+          remarks: roleForm.remarks,
+        })
+        if (code !== 200) {
+          ElMessage({
+            type: 'error',
+            message: msg,
+          })
+          return
+        }
 
+        ElMessage({
+          type: 'success',
+          message: msg,
+        })
+        submitLoading.value = false
+        // 通知父组件关闭弹窗
+        emit('submitSuccess')
+        return
+      } else {
+        ElMessage({
+          type: 'error',
+          message: '表单内容参数不符合提交规定',
+        })
+        submitLoading.value = false
+        return
+      }
+    })
   }
 
   const closeDialog = (formEl: FormInstance | undefined) => {
