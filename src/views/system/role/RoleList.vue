@@ -160,6 +160,11 @@
     })
   }
 
+  const handleChangeAdminState = (id: number) => {
+    console.log(id)
+    return true
+  }
+
   const handleSizeChange = (val: number) => {
     searchForm.pageSize = val
     search()
@@ -224,7 +229,13 @@
                 :header-cell-style='{fontSize: "15px", textAlign: "center"}'>
         <el-table-column label='序号' prop='id'></el-table-column>
         <el-table-column label='角色名称' prop='name'></el-table-column>
-        <el-table-column label='是否是超级管理员' prop='is_admin'></el-table-column>
+        <el-table-column label='是否是超级管理员' prop='is_admin'>
+          <template #default='scope'>
+            <el-switch v-model='scope.row.is_admin' :active-value='1' :inactive-value='0'
+                       active-text='是' inactive-text='否'
+                       :before-change='handleChangeAdminState(scope.row.id)'></el-switch>
+          </template>
+        </el-table-column>
         <el-table-column label='排序' prop='sort'></el-table-column>
         <el-table-column label='创建时间'>
           <template #default='scope'>
